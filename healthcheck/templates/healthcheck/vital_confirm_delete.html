@@ -1,0 +1,19 @@
+<div class="modal fade" id="delete-Modal-{{ object.pk }}" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ModalLabel">{{ object.checked_up_at|date:'n月j日 H:i' }}の測定結果を削除</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>削除するともとに戻せません。よろしいですか？
+        </div>
+        <div class="modal-footer">
+            <form method='POST' action="{% url 'delete' object.pk %}">
+            {% csrf_token %}
+              <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">キャンセル</button>
+              <button type="submit" class="btn btn-outline-danger rounded-pill">削除</button>
+            </form>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'healthcheck/css/vital_list.css' %}">
+<script src="{% static 'healthcheck/js/vital_list.js' %}" defer></script>
+{% endblock extrahead %}
+
+{% block title %}測定結果一覧{% endblock title %}
+
+{% block content %}
+
+{% if object_list %}
+<!-- <div class="list-container m-4 p-4 border border-2 border-secondary-subtle rounded bg-light d-flex justify-content-center"> -->
+<div class="list-container d-flex flex-column px-2"> 
+<table class="table table-hover mt-3 table-clickable shadow rounded bg-light">
+    <thead>
+        <th scope="col" class="text-center">
+            <span class="d-none d-lg-block d-xl-block d-xxl-block">
+                <i class="fa-solid fa-calendar-days me-1"></i>測定日時
+            </span>
+            <span class="d-lg-none d-xl-none d-xxl-none"><i class="fa-solid fa-calendar-days"></i></span>
+        </th>
+        <th scope="col" class="text-center">
+            <span class="d-none d-lg-block d-xl-block d-xxl-block">
+                <i class="fa-solid me-1 fa-temperature-half"></i>体温
+            </span>
+            <span class="d-lg-none d-xl-none d-xxl-none">
+                <i class="fa-solid fa-temperature-half" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="体温"></i>
+            </span>
+        </th>
+        <th scope="col" class="text-center">
+            <span class="d-none d-lg-block d-xl-block d-xxl-block">
+                <i class="fa-solid fa-cubes-stacked me-1"></i>血糖値
+            </span>
+            <span class="d-lg-none d-xl-none d-xxl-none">
+                <i class="fa-solid fa-cubes-stacked" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="血糖値"></i>
+            </span>
+        </th>
+        <th scope="col" class="text-center">
+            <span class="d-none d-lg-block d-xl-block d-xxl-block">
+                <i class="fa-solid fa-hand-point-up me-1"></i>酸素飽和度
+            </span>
+            <span class="d-lg-none d-xl-none d-xxl-none">
+                <i class="fa-solid fa-hand-point-up" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="酸素飽和度"></i>
+            </span>
+        </th>
+        <th scope="col" colspan="2" class="text-center">
+            <span class="d-none d-lg-block d-xl-block d-xxl-block">
+                <i class="fa-solid fa-up-down me-1"></i>血圧
+            </span>
+            <span class="d-lg-none d-xl-none d-xxl-none">
+                <i class="fa-solid fa-up-down" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="血圧"></i>
+            </span>
+        </th>
+    </thead>
+    <tbody class="table-group-divider" id="table-body-top">
+        {% for item in object_list %}
+        <tr data-href="{% url 'edit' item.id %}">
+            <th scope="row" class="text-center">{{ item.checked_up_at|date:'n/j H:i' }}</th>
+            <td class="text-center">{{ item.body_temperature|default_if_none:'－' }}</td>
+            <td class="text-center">{{ item.blood_sugar_level|default_if_none:'－' }}</td>
+            <td class="text-center">{{ item.spo2_level|default_if_none:'－' }}</td>
+            <td class="text-center">{{ item.blood_pressure_high|default_if_none:'－' }}</td>
+            <td class="text-center">{{ item.blood_pressure_low|default_if_none:'－' }}</td>
+        </tr>
+        {% endfor %}
+
+        <!--
+        {% if page_obj.has_other_pages %}
+        <tr>
+            <th colspan="6" class="">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;前へ</a>
+            {% else %}
+            <span class="text-muted">&lt;&lt;前へ</span>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">次へ&gt;&gt;</a>
+            {% else %}
+            <span class="text-muted">次へ&gt;&gt;</span>
+            {% endif %}
+            </th>
+        </tr>
+        {% endif %}
+        -->
+        
+    </tbody>
+</table>
+
+<!--
+<p>text</p>
+-->
+
+{% if page_obj.has_other_pages %}
+<div>
+<ul class="list-unstyled m-0 d-flex justify-content-between">
+    {% if page_obj.has_previous %}
+    <li><a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;前へ</a></li>
+    {% else %}
+    <li class="text-muted">&lt;&lt;前へ</li>
+    {% endif %}
+    {% if page_obj.has_next %}
+    <li><a href="?page={{ page_obj.next_page_number }}">次へ&gt;&gt;</a></li>
+    {% else %}
+    <li class="text-muted">次へ&gt;&gt;</li>
+    {% endif %}
+</ul>
+</div>
+{% endif %}
+</div>
+
+
+{% else %}
+<div class="container m-4 p-4 border border-2 border-secondary-subtle rounded bg-light">    
+    <h3 class="text-center m-3">「データ登録」からヘルスチェックデータを登録してください</h3>
+</div>
+{% endif %}
+
+{% endblock content %}

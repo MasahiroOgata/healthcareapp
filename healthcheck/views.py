@@ -1,0 +1,59 @@
+from django.core.serializers import serialize
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.models import User
+#from django.http import JsonResponse
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views import generic
+from .models import Vital
+import datetime
+
+class IndexView(LoginRequiredMixin, generic.ListView):
+    paginate_by = 15
+    def get_queryset(self):
+        return Vital.objects.filter(user=self.request.user).order_by('-checked_up_at')
+    
+class CreateView(LoginRequiredMixin, generic.CreateView):
+    model = Vital
+    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level', 
+              'blood_pressure_high', 'blood_pressure_low')
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user #User.objects.get(id=1) #ユーザーログイン機能作成後に変更
+        form.instance.checked_up_at = datetime.datetime.now(datetime.timezone.utc)
+        return super().form_valid(form)
+    
+class EditView(LoginRequiredMixin, generic.UpdateView):
+    model = Vital
+    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level', 
+              'blood_pressure_high', 'blood_pressure_low', 'checked_up_at')
+    
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+class DeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Vital
+    #template_name = 'healthcheck/vital_confirm_delete.html'
+    success_url = reverse_lazy('index')
+    
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     self.object.delete()
+    
+@login_required
+def chart_view(request):
+    object_list = Vital.objects.filter(user=request.user).order_by('-checked_up_at')
+    json_data = serialize('json', object_list)
+    return render(request, 'healthcheck/chart.html', {'object_list': object_list, 'object_list_json': json_data})
+        

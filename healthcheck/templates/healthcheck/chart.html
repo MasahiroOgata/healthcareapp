@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'healthcheck/css/chart.css' %}">
+<script src="{% static 'healthcheck/js/chart.js' %}" defer></script>
+<script>
+let vitalData = JSON.parse('{{ object_list_json|escapejs }}');
+</script>
+{% endblock extrahead %}
+
+{% block title %}グラフ表示{% endblock title %}
+
+{% block content %}
+<div class="container 
+    m-4 p-4 border border-2 border-secondary-subtle rounded bg-light-subtle">
+    <div class="d-flex justify-content-between">
+        <div class="d-none d-lg-block d-inline-flex p-2 border border-1 border-secondary-subtle rounded bg-light" id="healthRadio">
+            <div class="form-check-inline" id="health-check-item" >
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio1"
+                    value="0" onchange="changeChartItem()" checked>
+                <label class="form-check-label" for="healthRadio1">体温</label>
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio2"
+                    value="1" onchange="changeChartItem()" >
+                <label class="form-check-label" for="healthRadio2">血糖値</label>
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio5"
+                    value="5" onchange="changeChartItem()" >
+                <label class="form-check-label" for="healthRadio5">血糖値(時間帯別)</label>
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio3"
+                    value="2" onchange="changeChartItem()" >
+                <label class="form-check-label" for="healthRadio3">酸素飽和度</label>
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio4"
+                    value="3" onchange="changeChartItem()" >
+                <label class="form-check-label" for="healthRadio4">血圧</label>                 
+            </div>
+        </diV>
+
+        <div class="d-md-block d-lg-none d-inline-flex p-1 border border-1 border-secondary-subtle rounded bg-light">
+            <select class="form-select form-select-sm" name="healthSelectOptions" onchange="changeChartItem()">
+                <option value="0" selected>体温</option>
+                <option value="1">血糖値</option>
+                <option value="5">血糖値（時間帯別）</option>
+                <option value="2">酸素飽和度</option>
+                <option value="3">血圧</option>
+            </select>
+        </div>
+        
+        <div id="periodSelector">
+
+        <div class="d-none d-md-block p-2 border border-1 border-secondary-subtle rounded bg-light" id="periodRadio">
+            <div class="form-check-inline"  id="chart-period">
+                <input class="form-check-input ms-2" type="radio" name="periodRadioOptions" id="chatrtPeriod10"
+                    value="10" onchange="changeChartItem()">
+                <label class="form-check-label" for="chatrtPeriod10">10日</label>
+                <input class="form-check-input ms-2" type="radio" name="periodRadioOptions" id="chatrtPeriod20"
+                    value="20" onchange="changeChartItem()">
+                <label class="form-check-label" for="chatrtPeriod20">20日</label>
+                <input class="form-check-input ms-2" type="radio" name="periodRadioOptions" id="chatrtPeriod30"
+                    value="30" onchange="changeChartItem()" checked>
+                <label class="form-check-label" for="chatrtPeriod30">30日</label>
+            </div>
+        </div>
+
+        <div class="d-sm-block d-md-none d-inline-flex p-1 border border-1 border-secondary-subtle rounded bg-light">
+            <select class="form-select form-select-sm" name="periodSelectOptions" onchange="changeChartItem()">
+                <option value="10" selected>10日</option>
+                <option value="20">20日</option>
+                <option value="30">30日</option>
+            </select>
+        </div>
+
+        </div>
+
+    </div>
+    
+    <div class="d-flex justify-content-center chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+<!--
+<table class="table table-hover m-3">
+    <thead>
+        <th scope="col" class="text-center">測定日時</th>
+        <th scope="col" class="text-center">体温</th>
+        <th scope="col" class="text-center">血糖値</th>
+        <th scope="col" class="text-center">酸素飽和度</th>
+        <th scope="col" colspan="2" class="text-center">血圧</th>
+    </thead>
+    <tbody class="table-group-divider" id="table-body-top">
+        {% for item in object_list %}
+        <tr>
+            <th scope="row" class="text-center">{{ item.checked_up_at|date:'n月j日 H:i' }}</th>
+            <td class="text-center">{{ item.body_temperature }}</td>
+            <td class="text-center">{{ item.blood_sugar_level }}</td>
+            <td class="text-center">{{ item.spo2_level }}</td>
+            <td class="text-center">{{ item.blood_pressure_high }}</td>
+            <td class="text-center">{{ item.blood_pressure_low}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
+{% endblock content %}

@@ -1,0 +1,10 @@
+
+.navbar {
+    min-height: 50px;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

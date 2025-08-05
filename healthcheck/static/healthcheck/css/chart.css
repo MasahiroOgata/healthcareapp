@@ -1,0 +1,16 @@
+.container {
+  aspect-ratio: 16 / 9;  
+
+  width: 95%;
+  max-width: 1920px;
+  height: auto;
+  max-height: 90vh;
+}
+
+.chart-container {
+  aspect-ratio: 16 / 9; 
+
+  width: 100%;
+  height: auto;
+  max-height: 90%;
+}
