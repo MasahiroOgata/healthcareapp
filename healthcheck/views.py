@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 from .models import Vital
+from .vital_items import *
 import datetime
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -17,8 +18,14 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     
 class CreateView(LoginRequiredMixin, generic.CreateView):
     model = Vital
-    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level', 
+    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level', 'heart_rate',
               'blood_pressure_high', 'blood_pressure_low')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        item = {'vital_items': vital_items}
+        context.update(item)
+        return context
     
     def form_valid(self, form):
         form.instance.user = self.request.user #User.objects.get(id=1) #ユーザーログイン機能作成後に変更
@@ -27,8 +34,14 @@ class CreateView(LoginRequiredMixin, generic.CreateView):
     
 class EditView(LoginRequiredMixin, generic.UpdateView):
     model = Vital
-    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level', 
+    fields = ('body_temperature', 'blood_sugar_level', 'spo2_level',  'heart_rate',
               'blood_pressure_high', 'blood_pressure_low', 'checked_up_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        item = {'vital_items': vital_items}
+        context.update(item)
+        return context
     
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)

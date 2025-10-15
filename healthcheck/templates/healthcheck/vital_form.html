@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_filters %}
 
 {% block extrahead %}
 <link rel="stylesheet" href="{% static 'healthcheck/css/vital_form.css' %}">
@@ -9,98 +10,85 @@
 {% block title %}測定結果{{ object|yesno:'修正,登録'}}{% endblock title %}
 
 {% block content %}
-    <div class="container m-4 p-4">
-        {% if object %}
-        <p class="text-center h4 mb-4">{{ object.checked_up_at|date:'n月j日 H:i' }}の測定結果</p>
-        {% else %}
-        <p class="text-center h4 mb-4">測定データ登録</p>
-        {% endif %}
+    <div class="container mt-1 pt-2 p-4">
         <form  action='' method='post'>
-            {% csrf_token %}
+        {% csrf_token %}
+        {% if object %}
+        <div class="row  align-items-center">
+            <div class="col-lg-6">
+                <p class="text-center h4 mb-2">{{ object.checked_up_at|date:'n月j日 H:i' }}の測定結果</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="mb-4 p-3 shadow bg-white rounded">
+                    <input type="datetime-local" class="form-control form-control-lg" name="checked_up_at"
+                        value="{{ object.checked_up_at|date:'Y-m-d\\TH:i' }}">
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p class="text-center h4 mb-2">測定データ登録</p>
+        {% endif %}
             <div class="row">
                 <div class="col-lg-6">
 
+                <!-- 測定値入力 -->
+                {% for vital_item in vital_items %}
                     <div class="mb-4 p-3 shadow bg-white rounded">
+                        {% for item in vital_item %}
                         <div class="mb-3 row justify-content-between">
                             <div class="col-sm-6 row">
-                                <div class=" form-check-inline col-1">
-                                    <input class="form-check-input" type="checkbox" id="checkBoxBodyTemperature" checked
-                                    onchange="enableVitalInput(0)">
-                                </div>                                
-                                <label for="bodyTemperatureInput" class="col form-label fs-4 text-center">
-                                    <i class="fa-solid fa-temperature-half me-2"></i>体温 <!--<i class="fa-solid fa-thermometer me-2"></i>-->
+                                {% if forloop.counter0 != 1 %}
+                                <div class=" form-check-inline col-1">                                    
+                                    <input class="form-check-input" type="checkbox" id="{{item.vitalName }}CheckBox" 
+                                    {% if not object or object|getattr:item.fieldName is not None %}
+                                        checked
+                                    {% endif %}
+                                    onchange="enableVitalInput({{ forloop.parentloop.counter0 }})">
+                                </div>
+                                {% endif %}                               
+                                <label for="{{item.vitalName }}Input" class="col form-label fs-4 text-center">
+                                    <i class="fa-solid {{ item.iconName }} me-2"></i>{{ item.vitalTitle}}
                                 </label>                                
                             </div>
                             <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="bodyTemperatureInput"
-                                    name="body_temperature" min="34.0" max="42" value="{{ object.body_temperature|default:'36.5' }}" step="0.1"
-                                    onchange="this.value=parseFloat(this.value).toFixed(1)"
-                                    oninput="this.form.bodyTemperatureRange.value=this.value
-                                        this.form.checkBoxBodyTemperature.checked = true">
+                                <input type="number" class="form-control form-control-lg" id="{{ item.vitalName }}Input"
+                                    name="{{ item.fieldName }}" min="{{ item.inputMin }}" max="{{ item.inputMax }}" step="{{ item.step }}"
+                                    {% if object and object|getattr:item.fieldName is None %}
+                                        value=""
+                                    {% else %}
+                                        value="{{ object|getattr:item.fieldName|default:item.defaultValue }}"
+                                    {% endif %}
+                                    onchange="this.value=parseFloat(this.value).toFixed({{ item.floatDigit }})"
+                                    oninput="this.form.{{item.vitalName }}Range.value=this.value
+                                        this.form.{{item.vitalName }}CheckBox.checked = true">
                             </div>
                         </div>
-                        <input type="range" class="form-range" id="bodyTemperatureRange" min="35.0" max="38.0"
-                            value="{{ object.body_temperature|default:'36.5' }}" step="0.1"
-                            oninput="this.form.bodyTemperatureInput.value=parseFloat(this.value).toFixed(1)
-                                this.form.checkBoxBodyTemperature.checked = true">
+                        <input type="range" class="form-range" id="{{item.vitalName }}Range" min="{{ item.rangeMin }}" max="{{ item.rangeMax }}"
+                            value="{{ object|getattr:item.fieldName|default:item.defaultValue }}" step="{{ item.step }}"
+                            oninput="this.form.{{item.vitalName }}Input.value=parseFloat(this.value).toFixed({{ item.floatDigit }})
+                                this.form.{{item.vitalName }}CheckBox.checked = true">
+                        {% endfor %}
                     </div>
-
-                    <div class="mb-4 p-3 shadow bg-white rounded">
-                        <div class="mb-3 row justify-content-between">
-                            <div class="col-sm-6 row">
-                                <div class=" form-check-inline col-1">
-                                    <input class="form-check-input" type="checkbox" id="checkBoxBloodSugerLevel" checked
-                                    onchange="enableVitalInput(1)">
-                                </div>                                
-                                <label for="bloodSugerLevelInput" class="col form-label fs-4 text-center">
-                                    <i class="fa-solid fa-cubes-stacked me-2"></i>血糖値
-                                </label>                              
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="bloodSugerLevelInput"
-                                    name="blood_sugar_level" min="50" max="300" value="{{ object.blood_sugar_level|default:'130'}}" step="1"
-                                    oninput="this.form.bloodSugerLevelRange.value=this.value
-                                     this.form.checkBoxBloodSugerLevel.checked = true">
-                            </div>
-                        </div>
-                        <input type="range" class="form-range" id="bloodSugerLevelRange" min="60" max="200" 
-                            value="{{ object.blood_sugar_level|default:'130'}}" step="1"
-                            oninput="this.form.bloodSugerLevelInput.value=this.value
-                                this.form.checkBoxBloodSugerLevel.checked = true">
-                    </div>
-
-                    <div class="mb-4 p-3 shadow bg-white rounded">
-                        <div class="mb-3 row justify-content-between">
-                            <div class="col-sm-6 row">
-                                <div class=" form-check-inline col-1">
-                                    <input class="form-check-input" type="checkbox" id="checkBoxSpO2Level" checked
-                                    onchange="enableVitalInput(2)">
-                                </div>                                
-                                <label for="SpO2LevelInput" class="col form-label fs-4 text-center">
-                                    <i class="fa-solid fa-hand-point-up me-2"></i>酸素飽和度
-                                </label>                              
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="SpO2LevelInput"
-                                    name="spo2_level" min="50" max="100" value="{{ object.spo2_level|default:'98.00'}}" step="0.01"
-                                    onchange="this.value=parseFloat(this.value).toFixed(2)"
-                                    oninput="this.form.SpO2LevelRange.value=this.value
-                                        this.form.checkBoxSpO2Level.checked = true">
-                            </div>
-                        </div>
-                        <input type="range" class="form-range" id="SpO2LevelRange" min="95" max="100" 
-                            value="{{ object.spo2_level|default:'98'}}" step="0.01" 
-                            oninput="this.form.SpO2LevelInput.value=parseFloat(this.value).toFixed(2)
-                                this.form.checkBoxSpO2Level.checked = true">
-                    </div>
-                </div>
+                {% if forloop.counter0 == 2 %}
+                </div>                
 
                 <div class="col-lg-6 d-flex flex-column">
+                {% endif %}
+
+                {% endfor %} 
+
+                    <!-- 血圧入力 -->
                     <div class="mb-4 p-3 shadow bg-white rounded">
+                        {% for error in form.non_field_errors %}
+                            <div class="error text-center text-danger">{{ error }}</div>
+                        {% endfor %}
                         <div class="mb-3 row justify-content-between">
                             <div class="col-sm-6 row">
                                 <div class="form-check-inline col-1">
-                                    <input class="form-check-input" type="checkbox" id="checkBoxBloodPressure" checked
+                                    <input class="form-check-input" type="checkbox" id="'bloodPressureHighCheckBox"
+                                    {% if not object or object.blood_pressure_high is not None %}
+                                        checked
+                                    {% endif %}
                                     onchange="enableBloodPressureInput()">
                                 </div>                                
                                 <label for="bloodPressureHighInput" class="col form-label fs-4 text-center">
@@ -109,7 +97,12 @@
                             </div>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control form-control-lg" id="bloodPressureHighInput"
-                                    name="blood_pressure_high" min="60" max="260" value="{{ object.blood_pressure_high|default:'110'}}" step="1"
+                                    name="blood_pressure_high" min="60" max="260"  step="1"
+                                    {% if object and object.blood_pressure_high is None %}
+                                        value=""
+                                    {% else %}
+                                        value="{{ object.blood_pressure_high|default:'110'}}"
+                                    {% endif %}
                                     oninput="this.form.bloodPressureHighRange.value=this.value
                                         this.form.checkBoxBloodPressure.checked = true">
                             </div>
@@ -127,7 +120,12 @@
                             </div>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control form-control-lg" id="bloodPressureLowInput"
-                                    name="blood_pressure_low" min="30" max="215" value="{{ object.blood_pressure_low|default:'60'}}" step="1"
+                                    name="blood_pressure_low" min="30" max="215" step="1"
+                                    {% if object and object.blood_pressure_low is None %}
+                                        value=""
+                                    {% else %}
+                                        value="{{ object.blood_pressure_low|default:'60'}}"
+                                    {% endif %}
                                     oninput="this.form.bloodPressureLowRange.value=this.value
                                         this.form.checkBoxBloodPressure.checked = true">
                             </div>
@@ -138,19 +136,20 @@
                                 this.form.checkBoxBloodPressure.checked = true">
                     </div>
 
-                    {% if object %}
-                    <div class="mb-4 p-3 shadow bg-white rounded">
-                        <input type="datetime-local" class="form-control form-control-lg" name="checked_up_at"
-                            value="{{ object.checked_up_at|date:'Y-m-d\\TH:i' }}">
-                    </div>
-                    <div class="d-flex gap-3">
-                        <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill" style="flex: 3;">修正</button>
-                        <a type="button" class="btn btn-outline-danger shadow-lg rounded-pill" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#delete-Modal-{{ object.pk }}">削除</a>
-                    </div>
-                    {% else %}
-                    <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill form-control mt-auto mb-4">登録</button>
-                    {% endif %}
+
                 </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6">
+                        {% if object %}
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill" style="flex: 3;">修正</button>
+                            <a type="button" class="btn btn-outline-danger shadow-lg rounded-pill" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#delete-Modal-{{ object.pk }}">削除</a>
+                        </div>
+                        {% else %}
+                        <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill form-control mt-auto mb-4">登録</button>
+                        {% endif %}
+                        </div>
+                    </div>                
             </div>
         </form>
         {% if object %}

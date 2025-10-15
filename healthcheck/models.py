@@ -8,7 +8,8 @@ from django.urls import reverse
 class Vital(models.Model):
     body_temperature = models.FloatField(null=True, blank=True, verbose_name='体温')
     blood_sugar_level = models.IntegerField(null=True, blank=True, verbose_name='血糖値')
-    spo2_level = models.FloatField(null=True, blank=True, verbose_name='酸素飽和度')
+    spo2_level = models.IntegerField(null=True, blank=True, verbose_name='酸素飽和度')
+    heart_rate = models.IntegerField(null=True, blank=True, verbose_name='心拍数')
     blood_pressure_high = models.IntegerField(null=True, blank=True, verbose_name='最高血圧')
     blood_pressure_low = models.IntegerField(null=True, blank=True, verbose_name='最低血圧')
     checked_up_at = models.DateTimeField(verbose_name='測定日時')

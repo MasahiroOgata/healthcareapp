@@ -1,4 +1,4 @@
-const colorList = ["#de7a22", "#fd3c3c", "#061283", "#138d90"]
+const colorList = ["#de7a22", "#fd3c3c", "#061283", "#fd3c3c", "#138d90"]
 
 let labels = document.getElementsByTagName("label");
 for (let i=0; i<labels.length; i++) {
@@ -58,14 +58,20 @@ for (let i = 0; i < ranges.length; i++) {
 }
 
 const formIdList = [
-  ['checkBoxBodyTemperature', 'bodyTemperatureInput', 'bodyTemperatureRange'],
-  ['checkBoxBloodSugerLevel', 'bloodSugerLevelInput', 'bloodSugerLevelRange'],
-  ['checkBoxSpO2Level', 'SpO2LevelInput', 'SpO2LevelRange'],
+  ['bodyTemperatureCheckBox', 'bodyTemperatureInput', 'bodyTemperatureRange'],
+  ['bloodSugerLevelCheckBox', 'bloodSugerLevelInput', 'bloodSugerLevelRange'],
+  ['SpO2LevelCheckBox', 'SpO2LevelInput', 'SpO2LevelRange'],
+  ['heartRateCheckBox', 'heartRateInput', 'heartRateRange'],
 ];
 
-const initialValues = [36.5, 130, 98.00, ];
+const initialValues = [36.5, 130, 98, 80, ];
 
 function enableVitalInput(vital) {
+
+  if (vital == 4) {
+    enableBloodPressureInput();
+    return;
+  }
   
   if (!document.getElementById(formIdList[vital][0]).checked) {
     document.getElementById(formIdList[vital][1]).value = null;
@@ -76,7 +82,7 @@ function enableVitalInput(vital) {
 }
 
 function enableBloodPressureInput() {
-  if (!document.getElementById('checkBoxBloodPressure').checked) {
+  if (!document.getElementById('bloodPressureHighCheckBox').checked) {
     document.getElementById('bloodPressureHighInput').value = null;
     document.getElementById('bloodPressureLowInput').value = null;
   } else {
@@ -84,7 +90,6 @@ function enableBloodPressureInput() {
     document.getElementById('bloodPressureHighRange').value = 110;
     document.getElementById('bloodPressureLowInput').value = 60;
     document.getElementById('bloodPressureLowRange').value = 60;
-
   }
 
 }
