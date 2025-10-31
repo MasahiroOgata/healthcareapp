@@ -65,6 +65,7 @@ const formIdList = [
 ];
 
 const initialValues = [36.5, 130, 98, 80, ];
+let tempValues = [null, null, null, null, null, null, ];
 
 function enableVitalInput(vital) {
 
@@ -74,22 +75,28 @@ function enableVitalInput(vital) {
   }
   
   if (!document.getElementById(formIdList[vital][0]).checked) {
+    tempValues[vital] = document.getElementById(formIdList[vital][1]).value;
     document.getElementById(formIdList[vital][1]).value = null;
   } else {
-    document.getElementById(formIdList[vital][1]).value = initialValues[vital];
-    document.getElementById(formIdList[vital][2]).value = initialValues[vital];
+    document.getElementById(formIdList[vital][1]).value = tempValues[vital] || initialValues[vital];
+    document.getElementById(formIdList[vital][2]).value = tempValues[vital] || initialValues[vital];
+    tempValues[vital] = null;
   }
 }
 
 function enableBloodPressureInput() {
   if (!document.getElementById('bloodPressureHighCheckBox').checked) {
+    tempValues[4] = document.getElementById('bloodPressureHighInput').value;
+    tempValues[5] = document.getElementById('bloodPressureLowInput').value;
     document.getElementById('bloodPressureHighInput').value = null;
     document.getElementById('bloodPressureLowInput').value = null;
   } else {
-    document.getElementById('bloodPressureHighInput').value = 110;
-    document.getElementById('bloodPressureHighRange').value = 110;
-    document.getElementById('bloodPressureLowInput').value = 60;
-    document.getElementById('bloodPressureLowRange').value = 60;
+    document.getElementById('bloodPressureHighInput').value = tempValues[4] || 110;
+    document.getElementById('bloodPressureHighRange').value = tempValues[4] || 110;
+    document.getElementById('bloodPressureLowInput').value = tempValues[5] || 70;
+    document.getElementById('bloodPressureLowRange').value = tempValues[5] || 70;
+    tempValues[4] = null;
+    tempValues[4] = null;
   }
 
 }

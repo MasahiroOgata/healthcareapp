@@ -1,5 +1,5 @@
 from django.core.serializers import serialize
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.models import User
@@ -31,6 +31,36 @@ class CreateView(LoginRequiredMixin, generic.CreateView):
         form.instance.user = self.request.user #User.objects.get(id=1) #ユーザーログイン機能作成後に変更
         form.instance.checked_up_at = datetime.datetime.now(datetime.timezone.utc)
         return super().form_valid(form)
+    
+    # def post(self, request, *args, **kwargs):
+    #     self.object = None
+    #     form = self.get_form()
+
+    #     if form.is_valid():
+    #         obj = form.save(commit=False)
+    #         obj.user = self.request.user
+    #         obj.checked_up_at = datetime.datetime.now(datetime.timezone.utc)
+    #         try:
+    #             obj.full_clean()  # モデルレベルのバリデーション
+    #             obj.save()
+    #             return self.form_valid(form)
+    #         except ValidationError as e:
+    #             form.add_error(None, e)  # モデルのclean()エラーをフォームに追加
+    #     return self.form_invalid(form)
+    
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     obj.user = self.request.user
+    #     obj.checked_up_at = datetime.datetime.now(datetime.timezone.utc)
+    #     try:
+    #         obj.full_clean()  
+    #     except ValidationError as e:
+    #         form._update_errors(e)  
+    #         return self.form_invalid(form)
+    #     obj.save()
+    #     # form.instance.user = self.request.user #User.objects.get(id=1) #ユーザーログイン機能作成後に変更
+    #     # form.instance.checked_up_at = datetime.datetime.now(datetime.timezone.utc)
+    #     return super().form_valid(form)
     
 class EditView(LoginRequiredMixin, generic.UpdateView):
     model = Vital

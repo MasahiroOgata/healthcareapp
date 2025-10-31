@@ -23,25 +23,29 @@ let vitalData = JSON.parse('{{ object_list_json|escapejs }}');
                 <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio2"
                     value="1" onchange="changeChartItem()" >
                 <label class="form-check-label" for="healthRadio2">血糖値</label>
-                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio5"
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio6"
                     value="5" onchange="changeChartItem()" >
-                <label class="form-check-label" for="healthRadio5">血糖値(時間帯別)</label>
+                <label class="form-check-label" for="healthRadio6">血糖値(時間帯別)</label>
                 <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio3"
                     value="2" onchange="changeChartItem()" >
                 <label class="form-check-label" for="healthRadio3">酸素飽和度</label>
                 <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio4"
                     value="3" onchange="changeChartItem()" >
-                <label class="form-check-label" for="healthRadio4">血圧</label>                 
+                <label class="form-check-label" for="healthRadio4">心拍数</label>
+                <input class="form-check-input ms-2" type="radio" name="healthRadioOptions" id="healthRadio5"
+                    value="4" onchange="changeChartItem()" >
+                <label class="form-check-label" for="healthRadio5">血圧</label>                 
             </div>
         </diV>
 
-        <div class="d-md-block d-lg-none d-inline-flex p-1 border border-1 border-secondary-subtle rounded bg-light">
+        <div class="d-lg-none d-inline-flex p-1 border border-1 border-secondary-subtle rounded bg-light">
             <select class="form-select form-select-sm" name="healthSelectOptions" onchange="changeChartItem()">
                 <option value="0" selected>体温</option>
                 <option value="1">血糖値</option>
                 <option value="5">血糖値（時間帯別）</option>
                 <option value="2">酸素飽和度</option>
-                <option value="3">血圧</option>
+                <option value="3">心拍数</option>
+                <option value="4">血圧</option>
             </select>
         </div>
         

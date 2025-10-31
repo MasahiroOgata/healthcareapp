@@ -34,10 +34,20 @@
                 <!-- 測定値入力 -->
                 {% for vital_item in vital_items %}
                     <div class="mb-4 p-3 shadow bg-white rounded">
+                        <!-- バリデーションエラーメッセージを表示(血圧項目のみ) -->
+                        {% if forloop.counter0 == 4 %}
+                            {% for error in form.non_field_errors %}
+                                <div class="error text-center text-danger">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+
                         {% for item in vital_item %}
                         <div class="mb-3 row justify-content-between">
+                            {% if forloop.counter0 != 0 %}
+                            <div class="mt-5"></div>
+                            {% endif %}                        
                             <div class="col-sm-6 row">
-                                {% if forloop.counter0 != 1 %}
+                                {% if forloop.counter0 == 0 %}
                                 <div class=" form-check-inline col-1">                                    
                                     <input class="form-check-input" type="checkbox" id="{{item.vitalName }}CheckBox" 
                                     {% if not object or object|getattr:item.fieldName is not None %}
@@ -46,7 +56,7 @@
                                     onchange="enableVitalInput({{ forloop.parentloop.counter0 }})">
                                 </div>
                                 {% endif %}                               
-                                <label for="{{item.vitalName }}Input" class="col form-label fs-4 text-center">
+                                <label for="{{ item.vitalName }}Input" class="col form-label fs-4 text-center">
                                     <i class="fa-solid {{ item.iconName }} me-2"></i>{{ item.vitalTitle}}
                                 </label>                                
                             </div>
@@ -56,19 +66,21 @@
                                     {% if object and object|getattr:item.fieldName is None %}
                                         value=""
                                     {% else %}
-                                        value="{{ object|getattr:item.fieldName|default:item.defaultValue }}"
+                                        value="{{ form|get_field_value:item.fieldName|default:item.defaultValue }}"
                                     {% endif %}
-                                    onchange="this.value=parseFloat(this.value).toFixed({{ item.floatDigit }})"
+                                    onchange="this.value=parseFloat(this.value).toFixed({{ item.step|log:0.1 }})"
                                     oninput="this.form.{{item.vitalName }}Range.value=this.value
                                         this.form.{{item.vitalName }}CheckBox.checked = true">
                             </div>
                         </div>
                         <input type="range" class="form-range" id="{{item.vitalName }}Range" min="{{ item.rangeMin }}" max="{{ item.rangeMax }}"
-                            value="{{ object|getattr:item.fieldName|default:item.defaultValue }}" step="{{ item.step }}"
-                            oninput="this.form.{{item.vitalName }}Input.value=parseFloat(this.value).toFixed({{ item.floatDigit }})
+                            value="{{ form|get_field_value:item.fieldName|default:item.defaultValue }}" step="{{ item.step }}"
+                            oninput="this.form.{{item.vitalName }}Input.value=parseFloat(this.value).toFixed({{item.step|log:0.1 }})
                                 this.form.{{item.vitalName }}CheckBox.checked = true">
                         {% endfor %}
                     </div>
+
+                <!-- 各入力欄を2つのカラムに分割(画面サイズlg以上で折り返し表示) -->
                 {% if forloop.counter0 == 2 %}
                 </div>                
 
@@ -76,80 +88,20 @@
                 {% endif %}
 
                 {% endfor %} 
-
-                    <!-- 血圧入力 -->
-                    <div class="mb-4 p-3 shadow bg-white rounded">
-                        {% for error in form.non_field_errors %}
-                            <div class="error text-center text-danger">{{ error }}</div>
-                        {% endfor %}
-                        <div class="mb-3 row justify-content-between">
-                            <div class="col-sm-6 row">
-                                <div class="form-check-inline col-1">
-                                    <input class="form-check-input" type="checkbox" id="'bloodPressureHighCheckBox"
-                                    {% if not object or object.blood_pressure_high is not None %}
-                                        checked
-                                    {% endif %}
-                                    onchange="enableBloodPressureInput()">
-                                </div>                                
-                                <label for="bloodPressureHighInput" class="col form-label fs-4 text-center">
-                                    <i class="fa-solid fa-angle-up me-2"></i>最高血圧
-                                </label>                              
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="bloodPressureHighInput"
-                                    name="blood_pressure_high" min="60" max="260"  step="1"
-                                    {% if object and object.blood_pressure_high is None %}
-                                        value=""
-                                    {% else %}
-                                        value="{{ object.blood_pressure_high|default:'110'}}"
-                                    {% endif %}
-                                    oninput="this.form.bloodPressureHighRange.value=this.value
-                                        this.form.checkBoxBloodPressure.checked = true">
-                            </div>
-                        </div>
-                        <input type="range" class="mb-5 form-range" id="bloodPressureHighRange" min="40" max="180"
-                            value="{{ object.blood_pressure_high|default:'110'}}" step="1"
-                            oninput="this.form.bloodPressureHighInput.value=this.value
-                                this.form.checkBoxBloodPressure.checked = true">
-
-                        <div class="mt-2 mb-3 row justify-content-between">
-                            <div class="col-sm-6 text-center">
-                                <label for="bloodPressureLowInput" class="form-label fs-4">
-                                    <i class="fa-solid fa-angle-down me-2"></i>最低血圧
-                                </label>
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="bloodPressureLowInput"
-                                    name="blood_pressure_low" min="30" max="215" step="1"
-                                    {% if object and object.blood_pressure_low is None %}
-                                        value=""
-                                    {% else %}
-                                        value="{{ object.blood_pressure_low|default:'60'}}"
-                                    {% endif %}
-                                    oninput="this.form.bloodPressureLowRange.value=this.value
-                                        this.form.checkBoxBloodPressure.checked = true">
-                            </div>
-                        </div>
-                        <input type="range" class="form-range" id="bloodPressureLowRange" min="30" max="180" 
-                            value="{{ object.blood_pressure_low|default:'60'}}" step="1" 
-                            oninput="this.form.bloodPressureLowInput.value=this.value
-                                this.form.checkBoxBloodPressure.checked = true">
-                    </div>
-
-
                 </div>
-                    <div class="row justify-content-center">
-                        <div class="col-lg-6">
-                        {% if object %}
-                        <div class="d-flex gap-3">
-                            <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill" style="flex: 3;">修正</button>
-                            <a type="button" class="btn btn-outline-danger shadow-lg rounded-pill" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#delete-Modal-{{ object.pk }}">削除</a>
-                        </div>
-                        {% else %}
-                        <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill form-control mt-auto mb-4">登録</button>
-                        {% endif %}
-                        </div>
-                    </div>                
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-6">
+                    {% if object %}
+                    <div class="d-flex gap-3">
+                        <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill" style="flex: 3;">修正</button>
+                        <a type="button" class="btn btn-outline-danger shadow-lg rounded-pill" style="flex: 1;" data-bs-toggle="modal" data-bs-target="#delete-Modal-{{ object.pk }}">削除</a>
+                    </div>
+                    {% else %}
+                    <button type="submit" class="btn btn-outline-primary shadow-lg rounded-pill form-control mt-auto mb-4">登録</button>
+                    {% endif %}
+                    </div>
+                </div>                
             </div>
         </form>
         {% if object %}

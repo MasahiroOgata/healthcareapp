@@ -1,9 +1,10 @@
 //const dates = [];//"12/30", "12/31", "2015/1/1", "1/2", "1/3", "1/4", "1/5", "1/6", "1/6", "1/7",  "1/8",  "1/9",];
-const datesList = [[], [], [], []]
+const datesList = [[], [], [], [], []]
 const times = [];
 const bodyTemperatures = [];
 const bloodSugerLevels = [];
 const SpO2Levels = [];
+const heartRates = [];
 const bloodPressureHighs = [];
 const bloodPressureLows = [];
 const scatterBloodSugerLevels = [];
@@ -39,10 +40,14 @@ vitalData.forEach(element => {
     SpO2Levels.push(element.fields.spo2_level);
     datesList[2].push(japanTimeStr.substring(0, 5));
   }
+  if (element.fields.heart_rate) {
+    heartRates.push(element.fields.heart_rate);
+    datesList[3].push(japanTimeStr.substring(0, 5));
+  }
   if (element.fields.blood_pressure_high) {
     bloodPressureHighs.push(element.fields.blood_pressure_high);
     bloodPressureLows.push(element.fields.blood_pressure_low);
-    datesList[3].push(japanTimeStr.substring(0, 5));
+    datesList[4].push(japanTimeStr.substring(0, 5));
   }
   //bodyTemperatures.push(element.fields.body_temperature);
   //bloodSugerLevels.push(element.fields.blood_sugar_level);
@@ -51,6 +56,7 @@ vitalData.forEach(element => {
   // bloodPressureLows.push(element.fields.blood_pressure_low);
   scatterBloodSugerLevels.push({x:japanTimeStr.substring(6, 11), y:element.fields.blood_sugar_level});
 });
+
 
 // console.log(bloodSugerLevels);
 // console.log(datesList[1]);
@@ -78,7 +84,7 @@ vitalData.forEach(element => {
 //   bloodPressureLows.push(Math.min(high, low));
 // }
 
-const suggestedMinAndMax = [[35.5, 37.5], [90, 200], [90, 100], [50, 200]];
+const suggestedMinAndMax = [[35.5, 37.5], [90, 200], [90, 100], [50, 150], [50, 200]];
 
 const datasetsList = [
   [ //体温データ　datasetList[0]に格納
@@ -104,8 +110,16 @@ const datasetsList = [
       data: SpO2Levels
     }
   ],
+
+  [ //心拍数データ　datasetList[3]に格納
+    {
+      label: '心拍数', borderWidth: 2, fill: true,
+      borderColor: '#FF9F40', backgroundColor: 'rgba(155, 208, 245, 0.1)', tension: 0.2,
+      data: heartRates
+    }
+  ],
   
-  [ //血圧データ　datasetList[3]に格納
+  [ //血圧データ　datasetList[4]に格納
     {
       label: '最高血圧', borderWidth: 2, fill: true,
       borderColor: '#FF6384', backgroundColor: 'rgba(155, 208, 245, 0.1)', tension: 0.2,
@@ -128,7 +142,7 @@ const datasetsList = [
 window.onload = function () {
   
   console.log(vitalData);
-  
+    
   drawChart(0, 30);
 }
 

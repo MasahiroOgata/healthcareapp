@@ -23,6 +23,8 @@ class Vital(models.Model):
         super().clean()
         if bool(self.blood_pressure_high) != bool(self.blood_pressure_low):
             raise ValidationError('血圧の数値を両方入力してください')
+        if self.blood_pressure_high < self.blood_pressure_low:
+            raise ValidationError('血圧の上下の値が逆になっています')
 
     def __str__(self):
         return str(self.id) + ':' + self.user.username + ':' + str(self.checked_up_at.astimezone(timezone('Asia/Tokyo')))
