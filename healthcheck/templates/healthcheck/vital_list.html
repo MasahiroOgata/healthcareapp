@@ -52,51 +52,27 @@
             <td class="text-center">{{ item.blood_pressure_low|default_if_none:'－' }}</td>
         </tr>
         {% endfor %}
-
-        <!--
-        {% if page_obj.has_other_pages %}
-        <tr>
-            <th colspan="6" class="">
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;前へ</a>
-            {% else %}
-            <span class="text-muted">&lt;&lt;前へ</span>
-            {% endif %}
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">次へ&gt;&gt;</a>
-            {% else %}
-            <span class="text-muted">次へ&gt;&gt;</span>
-            {% endif %}
-            </th>
-        </tr>
-        {% endif %}
-        -->
-        
     </tbody>
 </table>
 
-<!--
-<p>text</p>
--->
-
-{% if page_obj.has_other_pages %}
-<div>
-<ul class="list-unstyled m-0 d-flex justify-content-between">
-    {% if page_obj.has_previous %}
-    <li><a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;前へ</a></li>
-    {% else %}
-    <li class="text-muted">&lt;&lt;前へ</li>
+    {% if page_obj.has_other_pages %}
+    <div>
+    <ul class="list-unstyled m-0 d-flex justify-content-between">
+        {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}">&lt;&lt;前へ</a></li>
+        {% else %}
+        <li class="text-muted">&lt;&lt;前へ</li>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}">次へ&gt;&gt;</a></li>
+        {% else %}
+        <li class="text-muted">次へ&gt;&gt;</li>
+        {% endif %}
+    </ul>
+    </div>
     {% endif %}
-    {% if page_obj.has_next %}
-    <li><a href="?page={{ page_obj.next_page_number }}">次へ&gt;&gt;</a></li>
-    {% else %}
-    <li class="text-muted">次へ&gt;&gt;</li>
-    {% endif %}
-</ul>
-</div>
-{% endif %}
-</div>
 
+</div>
 
 {% else %}
 <div class="container m-4 p-4 border border-2 border-secondary-subtle rounded bg-light">    
