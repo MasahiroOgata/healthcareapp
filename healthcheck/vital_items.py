@@ -1,7 +1,8 @@
 vital_items = [
     [
         {
-        'vitalTitle': '体温', 
+        'vitalTitle': '体温',
+        'vitalGroup': 'bodyTemperature',
         'vitalName': 'bodyTemperature', 
         'fieldName': 'body_temperature', 
         'iconName': 'fa-temperature-half', 
@@ -15,7 +16,8 @@ vital_items = [
     ], 
     [
         {
-        'vitalTitle': '血糖値', 
+        'vitalTitle': '血糖値',         
+        'vitalGroup': 'bloodSugerLevel',
         'vitalName': 'bloodSugerLevel', 
         'fieldName': 'blood_sugar_level', 
         'iconName': 'fa-cubes-stacked', 
@@ -29,7 +31,8 @@ vital_items = [
     ], 
     [
         {
-        'vitalTitle': '酸素飽和度', 
+        'vitalTitle': '酸素飽和度',
+        'vitalGroup': 'SpO2Level', 
         'vitalName': 'SpO2Level', 
         'fieldName': 'spo2_level', 
         'iconName': 'fa-hand-point-up', 
@@ -43,7 +46,8 @@ vital_items = [
     ], 
     [
         {
-        'vitalTitle': '心拍数', 
+        'vitalTitle': '心拍数',
+        'vitalGroup': 'heartRate', 
         'vitalName': 'heartRate', 
         'fieldName': 'heart_rate', 
         'iconName': 'fa-heart-pulse', 
@@ -57,7 +61,8 @@ vital_items = [
     ], 
     [
         {
-        'vitalTitle': '最高血圧', 
+        'vitalTitle': '最高血圧',
+        'vitalGroup': 'bloodPressure', 
         'vitalName': 'bloodPressureHigh', 
         'fieldName': 'blood_pressure_high', 
         'iconName': 'fa-angle-up', 
@@ -69,7 +74,8 @@ vital_items = [
         'rangeMax': 180
         }, 
         {
-        'vitalTitle': '最低血圧', 
+        'vitalTitle': '最低血圧',
+        'vitalGroup': 'bloodPressure', 
         'vitalName': 'bloodPressureLow', 
         'fieldName': 'blood_pressure_low', 
         'iconName': 'fa-angle-down', 

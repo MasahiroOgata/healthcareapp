@@ -6,7 +6,6 @@ for (let i=0; i<labels.length; i++) {
     labels[i].style.color = colorList[Math.min(i, colorList.length-1)];
 }
 
-
 function setRangeTrackColor(rangeElement, color) {
   //console.log(rangeElement.classList);
   const className = `range-track-${color.substring(1)}`; // ${Math.random().toString(36).substr(2, 5)}`;
@@ -58,45 +57,29 @@ for (let i = 0; i < ranges.length; i++) {
 }
 
 const formIdList = [
-  ['bodyTemperatureCheckBox', 'bodyTemperatureInput', 'bodyTemperatureRange'],
-  ['bloodSugerLevelCheckBox', 'bloodSugerLevelInput', 'bloodSugerLevelRange'],
-  ['SpO2LevelCheckBox', 'SpO2LevelInput', 'SpO2LevelRange'],
-  ['heartRateCheckBox', 'heartRateInput', 'heartRateRange'],
+  ['bodyTemperatureCheckBox', ['bodyTemperatureInput'], ['bodyTemperatureRange']],
+  ['bloodSugerLevelCheckBox', ['bloodSugerLevelInput'], ['bloodSugerLevelRange']],
+  ['SpO2LevelCheckBox', ['SpO2LevelInput'], ['SpO2LevelRange']],
+  ['heartRateCheckBox', ['heartRateInput'], ['heartRateRange']],
+  ['bloodPressureCheckBox', ['bloodPressureHighInput', 'bloodPressureLowInput'],
+   ['bloodPressureHighRange', 'bloodPressureLowRange']]
 ];
 
-const initialValues = [36.5, 130, 98, 80, ];
+const initialValues = [36.5, 130, 98, 80, 110, 70, ];
 let tempValues = [null, null, null, null, null, null, ];
 
 function enableVitalInput(vital) {
-
-  if (vital == 4) {
-    enableBloodPressureInput();
-    return;
-  }
   
   if (!document.getElementById(formIdList[vital][0]).checked) {
-    tempValues[vital] = document.getElementById(formIdList[vital][1]).value;
-    document.getElementById(formIdList[vital][1]).value = null;
+    for (let i = 0; i < formIdList[vital][1].length; i++) {
+      tempValues[vital + i] = document.getElementById(formIdList[vital][1][i]).value;
+      document.getElementById(formIdList[vital][1][i]).value = null;
+    }
   } else {
-    document.getElementById(formIdList[vital][1]).value = tempValues[vital] || initialValues[vital];
-    document.getElementById(formIdList[vital][2]).value = tempValues[vital] || initialValues[vital];
-    tempValues[vital] = null;
+    for (let i = 0; i < formIdList[vital][1].length; i++) {
+      document.getElementById(formIdList[vital][1][i]).value = tempValues[vital + i] || initialValues[vital + i];
+      document.getElementById(formIdList[vital][2][i]).value = tempValues[vital + i] || initialValues[vital + i];
+      tempValues[vital + i] = null;
+    }
   }
-}
-
-function enableBloodPressureInput() {
-  if (!document.getElementById('bloodPressureHighCheckBox').checked) {
-    tempValues[4] = document.getElementById('bloodPressureHighInput').value;
-    tempValues[5] = document.getElementById('bloodPressureLowInput').value;
-    document.getElementById('bloodPressureHighInput').value = null;
-    document.getElementById('bloodPressureLowInput').value = null;
-  } else {
-    document.getElementById('bloodPressureHighInput').value = tempValues[4] || 110;
-    document.getElementById('bloodPressureHighRange').value = tempValues[4] || 110;
-    document.getElementById('bloodPressureLowInput').value = tempValues[5] || 70;
-    document.getElementById('bloodPressureLowRange').value = tempValues[5] || 70;
-    tempValues[4] = null;
-    tempValues[4] = null;
-  }
-
 }
