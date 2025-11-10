@@ -72,13 +72,15 @@
                                     {% endif %}
                                     onchange="this.value=parseFloat(this.value).toFixed({{ item.step|log:0.1 }})"
                                     oninput="this.form.{{ item.vitalName }}Range.value=this.value
-                                        this.form.{{ item.vitalGroup }}CheckBox.checked = true">
+                                        this.form.{{ item.vitalGroup }}CheckBox.checked = true
+                                        enableGroupInput({{ forloop.parentloop.counter0 }})">
                             </div>
                         </div>
                         <input type="range" class="form-range" id="{{ item.vitalName }}Range" min="{{ item.rangeMin }}" max="{{ item.rangeMax }}"
                             value="{{ form|get_field_value:item.fieldName|default:item.defaultValue }}" step="{{ item.step }}"
                             oninput="this.form.{{ item.vitalName }}Input.value=parseFloat(this.value).toFixed({{ item.step|log:0.1 }})
-                                this.form.{{ item.vitalGroup }}CheckBox.checked = true">
+                                this.form.{{ item.vitalGroup }}CheckBox.checked = true
+                                enableGroupInput({{ forloop.parentloop.counter0 }})">
                         {% endfor %}
                     </div>
                 

@@ -83,3 +83,14 @@ function enableVitalInput(vital) {
     }
   }
 }
+
+function enableGroupInput(vital) {
+  if (vital == 4 && document.getElementById('bloodPressureCheckBox').checked) {
+    if (!document.getElementById('bloodPressureHighInput').value) {
+      document.getElementById('bloodPressureHighInput').value = tempValues[4] || initialValues[4];
+    }
+    if (!document.getElementById('bloodPressureLowInput').value) {
+      document.getElementById('bloodPressureLowInput').value = tempValues[5] || initialValues[5];
+    }
+  }
+}
