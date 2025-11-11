@@ -6,9 +6,8 @@ for (let i=0; i<labels.length; i++) {
     labels[i].style.color = colorList[Math.min(i, colorList.length-1)];
 }
 
-function setRangeTrackColor(rangeElement, color) {
-  //console.log(rangeElement.classList);
-  const className = `range-track-${color.substring(1)}`; // ${Math.random().toString(36).substr(2, 5)}`;
+function setRangeTrackColor(rangeElement, color) {  
+  const className = `range-track-${color.substring(1)}`;
   rangeElement.classList.add(className);
 
   const toRGBA = (hex, alpha) => {
