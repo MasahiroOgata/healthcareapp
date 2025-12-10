@@ -55,6 +55,13 @@ for (let i = 0; i < ranges.length; i++) {
   setRangeTrackColor(ranges[i], colorList[Math.min(i, colorList.length-1)]);
 }
 
+let scales = document.getElementsByClassName("range-scale");
+
+for (let i = 0; i < scales.length; i++) {
+  scales[i].style.color = colorList[Math.min(i, colorList.length-1)];
+}
+
+
 const formIdList = [
   ['bodyTemperatureCheckBox', ['bodyTemperatureInput'], ['bodyTemperatureRange']],
   ['bloodSugerLevelCheckBox', ['bloodSugerLevelInput'], ['bloodSugerLevelRange']],
@@ -92,4 +99,13 @@ function enableGroupInput(vital) {
       document.getElementById('bloodPressureLowInput').value = tempValues[5] || initialValues[5];
     }
   }
+}
+
+function stepValue(vital, step, dir) {    
+    console.log(vital);
+    console.log(typeof vital);
+    const dec = (step.toString().split('.')[1] || '').length;
+    const value = Number(vital.value || 0);
+    newValue = (value + step * dir).toFixed(dec);
+    vital.value = newValue;
 }

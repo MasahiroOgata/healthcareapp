@@ -8,3 +8,19 @@
   justify-content: center;
   align-items: center;
 }
+
+.navbar-brand::after {
+  content: '';
+  opacity: 1;
+
+  height: 2px;
+  width: 100%;
+  background-color: rebeccapurple;
+
+  bottom: 0;
+  left: 0;
+}
+
+.navbar-brand:hover::after {
+  opacity: 1;
+}

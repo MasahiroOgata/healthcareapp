@@ -62,8 +62,12 @@
                                     <i class="fa-solid {{ item.iconName }} me-2"></i>{{ item.vitalTitle }}
                                 </label>                                
                             </div>
-                            <div class="col-sm-6">
-                                <input type="number" class="form-control form-control-lg" id="{{ item.vitalName }}Input"
+                            <div class="col-sm-6 row">
+                                <button type="button" class="btn btn-outline-primary mx-1 col-2"
+                                    onclick="stepValue({{ item.vitalName }}Input, {{ item.step }}, -1)">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>
+                                <input type="number" class="form-control form-control-lg col" id="{{ item.vitalName }}Input"
                                     name="{{ item.fieldName }}" min="{{ item.inputMin }}" max="{{ item.inputMax }}" step="{{ item.step }}"
                                     {% if object and object|getattr:item.fieldName is None %}
                                         value=""
@@ -74,6 +78,10 @@
                                     oninput="this.form.{{ item.vitalName }}Range.value=this.value
                                         this.form.{{ item.vitalGroup }}CheckBox.checked = true
                                         enableGroupInput({{ forloop.parentloop.counter0 }})">
+                                <button  type="button" class="btn btn-outline-primary mx-1 col-2"
+                                    onclick="stepValue({{ item.vitalName }}Input, {{ item.step }}, 1)">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                         <input type="range" class="form-range" id="{{ item.vitalName }}Range" min="{{ item.rangeMin }}" max="{{ item.rangeMax }}"
@@ -81,6 +89,11 @@
                             oninput="this.form.{{ item.vitalName }}Input.value=parseFloat(this.value).toFixed({{ item.step|log:0.1 }})
                                 this.form.{{ item.vitalGroup }}CheckBox.checked = true
                                 enableGroupInput({{ forloop.parentloop.counter0 }})">
+                        <div class="row justify-content-between range-scale">
+                            <div class="col fw-light">{{ item.rangeMin }}</div>
+                            <div class="col text-center fw-light">mid</div>
+                            <div class="col text-end fw-light">{{ item.rangeMax }}</div>
+                        </div>
                         {% endfor %}
                     </div>
                 
