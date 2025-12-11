@@ -63,10 +63,12 @@
                                 </label>                                
                             </div>
                             <div class="col-sm-6 row">
-                                <button type="button" class="btn btn-outline-primary mx-1 col-2"
-                                    onclick="stepValue({{ item.vitalName }}Input, {{ item.step }}, -1)">
-                                    <i class="fa-solid fa-minus"></i>
-                                </button>
+                                <div class="col-2 justify-content-center align-items-center p-0">
+                                    <button type="button" class="btn btn-outline-primary circle-btn"
+                                        onmousedown="stepValue({{ item.vitalName }}Input, {{ item.vitalName }}Range, {{ item.step }}, -1)">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                </div>
                                 <input type="number" class="form-control form-control-lg col" id="{{ item.vitalName }}Input"
                                     name="{{ item.fieldName }}" min="{{ item.inputMin }}" max="{{ item.inputMax }}" step="{{ item.step }}"
                                     {% if object and object|getattr:item.fieldName is None %}
@@ -78,10 +80,12 @@
                                     oninput="this.form.{{ item.vitalName }}Range.value=this.value
                                         this.form.{{ item.vitalGroup }}CheckBox.checked = true
                                         enableGroupInput({{ forloop.parentloop.counter0 }})">
-                                <button  type="button" class="btn btn-outline-primary mx-1 col-2"
-                                    onclick="stepValue({{ item.vitalName }}Input, {{ item.step }}, 1)">
-                                    <i class="fa-solid fa-plus"></i>
-                                </button>
+                                <div class="col-2 justify-content-center align-items-center p-0">
+                                    <button  type="button" class="btn btn-outline-primary ms-1 circle-btn"
+                                        onmousedown="stepValue({{ item.vitalName }}Input, {{ item.vitalName }}Range, {{ item.step }}, 1)">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <input type="range" class="form-range" id="{{ item.vitalName }}Range" min="{{ item.rangeMin }}" max="{{ item.rangeMax }}"

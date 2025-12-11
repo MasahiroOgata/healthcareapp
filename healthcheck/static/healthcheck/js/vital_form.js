@@ -6,6 +6,9 @@ for (let i=0; i<labels.length; i++) {
     labels[i].style.color = colorList[Math.min(i, colorList.length-1)];
 }
 
+let btns = document.getElementsByClassName("circle-btn");
+console.log(btns);
+
 function setRangeTrackColor(rangeElement, color) {  
   const className = `range-track-${color.substring(1)}`;
   rangeElement.classList.add(className);
@@ -101,11 +104,15 @@ function enableGroupInput(vital) {
   }
 }
 
-function stepValue(vital, step, dir) {    
-    console.log(vital);
-    console.log(typeof vital);
+function stepValue(vitalInput, vitalRange, step, dir) {
+    //console.log(vitalInput.min, vitalInput.max);
     const dec = (step.toString().split('.')[1] || '').length;
-    const value = Number(vital.value || 0);
-    newValue = (value + step * dir).toFixed(dec);
-    vital.value = newValue;
+    const value = Number(vitalInput.value || 0);
+    if (dir > 0) {
+      var newValue = Math.min(vitalInput.max, (value + step * dir)).toFixed(dec);
+    } else {
+      var newValue = Math.max(vitalInput.min, (value + step * dir)).toFixed(dec);
+    }
+    vitalInput.value = newValue;
+    vitalRange.value = newValue;
 }
