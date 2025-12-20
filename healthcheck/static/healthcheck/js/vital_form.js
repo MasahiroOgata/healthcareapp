@@ -7,6 +7,10 @@ for (let i=0; i<labels.length; i++) {
 }
 
 let btns = document.getElementsByClassName("circle-btn");
+for (let i=0; i<btns.length; i+=2) {
+  btns[i].style.borderColor = colorList[Math.min(i/2, colorList.length-1)];
+  btns[i+1].style.borderColor = colorList[Math.min(i/2, colorList.length-1)];
+}
 console.log(btns);
 
 function setRangeTrackColor(rangeElement, color) {  
