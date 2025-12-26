@@ -66,7 +66,7 @@
                                 <div class="col-2 justify-content-center align-items-center p-0">
                                     <button type="button" class="btn btn-outline-primary circle-btn"
                                         onmousedown="stepValue({{ item.vitalName }}Input, {{ item.vitalName }}Range, {{ item.step }}, -1)">
-                                        <i class="fa-solid fa-minus"></i>
+                                        <i class="fa-solid fa-minus icon-pm"></i>
                                     </button>
                                 </div>
                                 <input type="number" class="form-control form-control-lg col" id="{{ item.vitalName }}Input"
@@ -83,7 +83,7 @@
                                 <div class="col-2 justify-content-center align-items-center p-0">
                                     <button  type="button" class="btn btn-outline-primary ms-1 circle-btn"
                                         onmousedown="stepValue({{ item.vitalName }}Input, {{ item.vitalName }}Range, {{ item.step }}, 1)">
-                                        <i class="fa-solid fa-plus"></i>
+                                        <i class="fa-solid fa-plus icon-pm"></i>
                                     </button>
                                 </div>
                             </div>
@@ -95,7 +95,7 @@
                                 enableGroupInput({{ forloop.parentloop.counter0 }})">
                         <div class="row justify-content-between range-scale">
                             <div class="col fw-light">{{ item.rangeMin }}</div>
-                            <div class="col text-center fw-light">mid</div>
+                            <div class="col text-center fw-light">{{ item.rangeMin|mid_value:item.rangeMax }}</div>
                             <div class="col text-end fw-light">{{ item.rangeMax }}</div>
                         </div>
                         {% endfor %}

@@ -1,4 +1,5 @@
 import math
+import re
 from django import template
 
 register = template.Library()
@@ -24,3 +25,7 @@ def log(value, base=math.e):
         return math.log(value, base)
     except (ValueError, TypeError):
         return ''
+
+@register.filter
+def mid_value(min, max):
+    return re.sub(r'\.0$', '', str(round((min + max) / 2, 1)))

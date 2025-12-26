@@ -7,11 +7,19 @@ for (let i=0; i<labels.length; i++) {
 }
 
 let btns = document.getElementsByClassName("circle-btn");
-for (let i=0; i<btns.length; i+=2) {
-  btns[i].style.borderColor = colorList[Math.min(i/2, colorList.length-1)];
-  btns[i+1].style.borderColor = colorList[Math.min(i/2, colorList.length-1)];
+let icons = document.getElementsByClassName("icon-pm")
+for (let i=0; i<btns.length; i++) {
+  btns[i].style.borderColor = colorList[Math.min(Math.floor(i/2), colorList.length-1)];
+  icons[i].style.color = colorList[Math.min(Math.floor(i/2), colorList.length-1)];
+  btns[i].addEventListener('mouseover', function() {
+    btns[i].style.backgroundColor = colorList[Math.min(Math.floor(i/2), colorList.length-1)];
+    icons[i].style.color = "white";
+  });
+  btns[i].addEventListener('mouseleave', function() {
+    btns[i].style.backgroundColor = 'white';
+    icons[i].style.color = colorList[Math.min(Math.floor(i/2), colorList.length-1)];
+  });
 }
-console.log(btns);
 
 function setRangeTrackColor(rangeElement, color) {  
   const className = `range-track-${color.substring(1)}`;
